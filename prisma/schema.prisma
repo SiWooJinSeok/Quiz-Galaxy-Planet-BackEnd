@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int   @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  profile_image String?
+  introduction String?
+  scores       Score[]
+  quizzes      Quiz[]
+  sentRequests FriendRequest[] @relation("sentRequests")
+  receivedRequests FriendRequest[] @relation("receivedRequests")
+  friend   FriendList[] @relation("Friend")
+  onwer   FriendList[] @relation("onwer")
+}
+
+model Quiz {
+  id                Int     @id @default(autoincrement())
+  category          String
+  question          String
+  answer            String
+  incorrect_answers String?
+  quiz_type         String
+  visibility        String
+  user_id           Int
+  user              User    @relation(fields: [user_id], references: [id])
+}
+
+model FriendList {
+  id        Int   @id @default(autoincrement())
+  user_id   Int
+  friend_id Int
+  user      User     @relation("onwer", fields: [user_id], references: [id])
+  friend    User     @relation("Friend", fields: [friend_id], references: [id])
+  @@unique([user_id, friend_id])
+}
+
+model Score {
+  id         Int    @id @default(autoincrement())
+  user_score Int?
+  category   String
+  user_id    Int
+  user       User   @relation(fields: [user_id], references: [id])
+}
+
+model FriendRequest {
+  id          Int    @id @default(autoincrement())
+  sender_id   Int
+  receiver_id Int
+  sender      User     @relation("sentRequests", fields: [sender_id], references: [id])
+  receiver    User     @relation("receivedRequests", fields: [receiver_id], references: [id])
+  @@unique([sender_id, receiver_id])
+}
