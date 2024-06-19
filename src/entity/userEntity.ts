@@ -5,3 +5,8 @@ export interface UserInfoEntity {
   profile_image?: string;
   introduction?: string;
 }
+
+export interface UserJWTEntity extends UserInfoEntity {
+  accessToken: string;
+  refreshToken: string;
+}

@@ -11,8 +11,18 @@ export class SignupDTO {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(6)
+  @MinLength(8)
   password: string;
+}
+
+export class ConfirmEmailDTO {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  code: string;
 }
 
 export class LoginDTO {

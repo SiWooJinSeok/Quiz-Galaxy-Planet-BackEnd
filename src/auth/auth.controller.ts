@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInfoEntity } from '../entity/userEntity';
-import { LoginDTO, SignupDTO } from '../dto/authDTO';
+import { ConfirmEmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
 
 @Controller('auth')
 export class AuthController {
@@ -15,5 +15,10 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() signupDTO: SignupDTO) {
     return this.authService.signup(signupDTO);
+  }
+
+  @Post('confirm-email')
+  async confirmEmail(@Body() confirmEmailDTO: ConfirmEmailDTO) {
+    return this.authService.confirmEmail(confirmEmailDTO);
   }
 }
