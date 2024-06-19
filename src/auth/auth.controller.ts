@@ -10,4 +10,9 @@ export class AuthController {
   async login(): Promise<UserInfoEntity> {
     return this.authService.login();
   }
+
+  @Post('signup')
+  async signup() {
+    return this.authService.signup();
+  }
 }
