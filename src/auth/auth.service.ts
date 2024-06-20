@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserInfoEntity } from '../entity/userEntity';
 import { PrismaService } from './../prisma.service';
 import { convertToJWTUserInfoEntity } from './../utils/convertEntity';
@@ -10,6 +10,7 @@ import {
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfirmEmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
+import { AUTH_ERROR_MESSAGE } from 'src/constant/message';
 
 @Injectable()
 export class AuthService {
@@ -42,7 +43,21 @@ export class AuthService {
       });
       return convertToJWTUserInfoEntity(user, result?.AuthenticationResult);
     } catch (err) {
-      throw new HttpException(err.message, 400);
+      if (err.name === 'NotAuthorizedException') {
+        throw new HttpException(
+          AUTH_ERROR_MESSAGE.EMAIL_OR_PASSWORD_NOT_MATCH,
+          err.$metadata.httpStatusCode,
+        );
+      }
+
+      if (err.name === 'UserNotConfirmedException') {
+        throw new HttpException(
+          AUTH_ERROR_MESSAGE.EMAIL_FORBIDDEN,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
     }
   }
 
@@ -66,7 +81,7 @@ export class AuthService {
         },
       });
     } catch (err) {
-      throw new HttpException(err.message, 400);
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
     }
   }
 
@@ -82,7 +97,13 @@ export class AuthService {
     try {
       await this.client.send(command);
     } catch (err) {
-      throw new HttpException(err.message, 400);
+      if (err.name === 'CodeMismatchException') {
+        throw new HttpException(
+          AUTH_ERROR_MESSAGE.CONFIRM_BAD_REQUEST,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
     }
   }
 }
