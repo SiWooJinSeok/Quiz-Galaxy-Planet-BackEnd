@@ -10,7 +10,7 @@ import {
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfirmEmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
-import { AUTH_ERROR_MESSAGE } from 'src/constant/message';
+import { AUTH_ERROR_MESSAGE } from '../constant/message';
 
 @Injectable()
 export class AuthService {

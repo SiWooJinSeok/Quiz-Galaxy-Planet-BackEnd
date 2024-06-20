@@ -1,8 +1,8 @@
 import { HttpCode, HttpStatus, Post, applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserJWTEntity } from './../entity/userEntity';
-import { AUTH_ERROR_MESSAGE } from 'src/constant/message';
-import { AUTH_RESPONSE_DESRIPTION } from 'src/constant/description';
+import { AUTH_ERROR_MESSAGE } from '../constant/message';
+import { AUTH_RESPONSE_DESRIPTION } from '../constant/description';
 
 export const LoginDecorator = (path: string) => {
   return applyDecorators(

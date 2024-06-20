@@ -5,7 +5,7 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { LoginDTO } from 'src/dto/authDTO';
+import { LoginDTO } from '../dto/authDTO';
 
 describe('AuthService', () => {
   let service: AuthService;
