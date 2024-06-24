@@ -73,6 +73,11 @@ export const ResendConfirmEmailDecorator = (path: string) => {
       status: HttpStatus.NO_CONTENT,
       description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
     }),
+    createResponseMessage(
+      HttpStatus.NOT_FOUND,
+      AUTH_RESPONSE_DESRIPTION.NOT_FOUND,
+      AUTH_ERROR_MESSAGE.USER_NOT_FOUND,
+    ),
   );
 };
 
@@ -87,6 +92,11 @@ export const PasswordForgotDecorator = (path: string) => {
       status: HttpStatus.NO_CONTENT,
       description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
     }),
+    createResponseMessage(
+      HttpStatus.NOT_FOUND,
+      AUTH_RESPONSE_DESRIPTION.NOT_FOUND,
+      AUTH_ERROR_MESSAGE.USER_NOT_FOUND,
+    ),
   );
 };
 

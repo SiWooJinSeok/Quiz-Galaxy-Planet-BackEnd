@@ -4,4 +4,5 @@ export const AUTH_RESPONSE_DESRIPTION = {
   FORBIDDEN: 'Forbidden',
   CREATED: 'Created',
   NO_CONTENT: 'NoContent',
+  NOT_FOUND: 'NotFound',
 };

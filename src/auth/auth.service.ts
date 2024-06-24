@@ -5,6 +5,7 @@ import { convertToJWTUserInfoEntity } from './../utils/convertEntity';
 import {
   CognitoIdentityProviderClient,
   ConfirmSignUpCommand,
+  ForgotPasswordCommand,
   InitiateAuthCommand,
   InitiateAuthCommandInput,
   ResendConfirmationCodeCommand,
@@ -116,6 +117,35 @@ export class AuthService {
     const { email } = EmailDTO;
 
     const command = new ResendConfirmationCodeCommand({
+      ClientId: this.CLIENT_ID,
+      Username: email,
+    });
+
+    try {
+      await this.client.send(command);
+    } catch (err) {
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
+    }
+  }
+
+  // 비밀번호 찾기
+  async passwordForgot(EmailDTO: EmailDTO) {
+    const { email } = EmailDTO;
+
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException(
+        AUTH_ERROR_MESSAGE.USER_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const command = new ForgotPasswordCommand({
       ClientId: this.CLIENT_ID,
       Username: email,
     });

@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   ConfirmEmailDecorator,
   LoginDecorator,
+  PasswordForgotDecorator,
   ResendConfirmEmailDecorator,
   SignupDecorator,
 } from '../decorator/authDecorator';
@@ -33,5 +34,10 @@ export class AuthController {
   @ResendConfirmEmailDecorator('resend-code')
   async resendConfirmEmail(@Body() emailDTO: EmailDTO) {
     return this.authService.resendConfirmEmail(emailDTO);
+  }
+
+  @PasswordForgotDecorator('password-forgot')
+  async passwordForgot(@Body() emailDTO: EmailDTO) {
+    return this.authService.passwordForgot(emailDTO);
   }
 }
