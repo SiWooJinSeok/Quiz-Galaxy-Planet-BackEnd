@@ -62,6 +62,48 @@ export const ConfirmEmailDecorator = (path: string) => {
   );
 };
 
+export const ResendConfirmEmailDecorator = (path: string) => {
+  return applyDecorators(
+    Post(path),
+    HttpCode(HttpStatus.NO_CONTENT),
+    ApiOperation({
+      summary: '이메일 재전송',
+    }),
+    ApiResponse({
+      status: HttpStatus.NO_CONTENT,
+      description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
+    }),
+  );
+};
+
+export const PasswordForgotDecorator = (path: string) => {
+  return applyDecorators(
+    Post(path),
+    HttpCode(HttpStatus.NO_CONTENT),
+    ApiOperation({
+      summary: '비밀번호 찾기 코드 보내기',
+    }),
+    ApiResponse({
+      status: HttpStatus.NO_CONTENT,
+      description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
+    }),
+  );
+};
+
+export const PasswordResetDecorator = (path: string) => {
+  return applyDecorators(
+    Post(path),
+    HttpCode(HttpStatus.NO_CONTENT),
+    ApiOperation({
+      summary: '비밀번호 재설정',
+    }),
+    ApiResponse({
+      status: HttpStatus.NO_CONTENT,
+      description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
+    }),
+  );
+};
+
 export const createResponseMessage = (
   status: number,
   description: string,

@@ -7,9 +7,10 @@ import {
   ConfirmSignUpCommand,
   InitiateAuthCommand,
   InitiateAuthCommandInput,
+  ResendConfirmationCodeCommand,
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { ConfirmEmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
+import { ConfirmEmailDTO, EmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
 import { AUTH_ERROR_MESSAGE } from '../constant/message';
 
 @Injectable()
@@ -41,6 +42,7 @@ export class AuthService {
           email,
         },
       });
+
       return convertToJWTUserInfoEntity(user, result?.AuthenticationResult);
     } catch (err) {
       if (err.name === 'NotAuthorizedException') {
@@ -61,10 +63,10 @@ export class AuthService {
     }
   }
 
+  // 회원가입
   async signup(signupDTO: SignupDTO) {
     const { email, nickname, password } = signupDTO;
 
-    // SignUpCommand로 가입시키기
     const command = new SignUpCommand({
       ClientId: this.CLIENT_ID,
       Password: password,
@@ -85,9 +87,10 @@ export class AuthService {
     }
   }
 
+  // 이메일 인증하기
   async confirmEmail(confirmEmailDTO: ConfirmEmailDTO) {
     const { email, code } = confirmEmailDTO;
-    // 이메일 인증 코드 확인하기
+
     const command = new ConfirmSignUpCommand({
       ClientId: process.env.COGNITO_CLIENT_ID,
       Username: email,
@@ -103,6 +106,23 @@ export class AuthService {
           HttpStatus.BAD_REQUEST,
         );
       }
+
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
+    }
+  }
+
+  // 이메일 인증 다시 보내기
+  async resendConfirmEmail(EmailDTO: EmailDTO) {
+    const { email } = EmailDTO;
+
+    const command = new ResendConfirmationCodeCommand({
+      ClientId: this.CLIENT_ID,
+      Username: email,
+    });
+
+    try {
+      await this.client.send(command);
+    } catch (err) {
       throw new HttpException(err.message, err.$metadata.httpStatusCode);
     }
   }

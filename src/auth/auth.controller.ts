@@ -1,11 +1,12 @@
 import { Body, Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInfoEntity } from '../entity/userEntity';
-import { ConfirmEmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
+import { ConfirmEmailDTO, EmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ConfirmEmailDecorator,
   LoginDecorator,
+  ResendConfirmEmailDecorator,
   SignupDecorator,
 } from '../decorator/authDecorator';
 
@@ -27,5 +28,10 @@ export class AuthController {
   @ConfirmEmailDecorator('confirm-email')
   async confirmEmail(@Body() confirmEmailDTO: ConfirmEmailDTO) {
     return this.authService.confirmEmail(confirmEmailDTO);
+  }
+
+  @ResendConfirmEmailDecorator('resend-code')
+  async resendConfirmEmail(@Body() emailDTO: EmailDTO) {
+    return this.authService.resendConfirmEmail(emailDTO);
   }
 }
