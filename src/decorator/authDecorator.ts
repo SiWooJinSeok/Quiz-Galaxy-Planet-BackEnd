@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserJWTEntity } from './../entity/userEntity';
 import { AUTH_ERROR_MESSAGE } from '../constant/message';
 import { AUTH_RESPONSE_DESRIPTION } from '../constant/description';
+import { createResponseMessage } from '../utils/decoratorUtil';
 
 export const LoginDecorator = (path: string) => {
   return applyDecorators(
@@ -112,21 +113,4 @@ export const PasswordResetDecorator = (path: string) => {
       description: AUTH_RESPONSE_DESRIPTION.NO_CONTENT,
     }),
   );
-};
-
-export const createResponseMessage = (
-  status: number,
-  description: string,
-  message: string,
-) => {
-  return ApiResponse({
-    status,
-    description,
-    schema: {
-      type: 'object',
-      properties: {
-        message: { example: message },
-      },
-    },
-  });
 };
