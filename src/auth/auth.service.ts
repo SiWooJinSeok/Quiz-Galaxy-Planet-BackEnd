@@ -4,6 +4,7 @@ import { PrismaService } from './../prisma.service';
 import { convertToJWTUserInfoEntity } from './../utils/convertEntity';
 import {
   CognitoIdentityProviderClient,
+  ConfirmForgotPasswordCommand,
   ConfirmSignUpCommand,
   ForgotPasswordCommand,
   InitiateAuthCommand,
@@ -11,7 +12,13 @@ import {
   ResendConfirmationCodeCommand,
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { ConfirmEmailDTO, EmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
+import {
+  ConfirmEmailDTO,
+  EmailDTO,
+  LoginDTO,
+  PasswordResetDTO,
+  SignupDTO,
+} from '../dto/authDTO';
 import { AUTH_ERROR_MESSAGE } from '../constant/message';
 
 @Injectable()
@@ -148,6 +155,24 @@ export class AuthService {
     const command = new ForgotPasswordCommand({
       ClientId: this.CLIENT_ID,
       Username: email,
+    });
+
+    try {
+      await this.client.send(command);
+    } catch (err) {
+      throw new HttpException(err.message, err.$metadata.httpStatusCode);
+    }
+  }
+
+  // 비밀번호 리셋
+  async passwordReset(passwordResetDTO: PasswordResetDTO) {
+    const { email, code, newPassword } = passwordResetDTO;
+
+    const command = new ConfirmForgotPasswordCommand({
+      ClientId: this.CLIENT_ID,
+      Username: email,
+      ConfirmationCode: code,
+      Password: newPassword,
     });
 
     try {

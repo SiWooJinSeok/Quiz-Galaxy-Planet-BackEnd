@@ -1,12 +1,19 @@
 import { Body, Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserInfoEntity } from '../entity/userEntity';
-import { ConfirmEmailDTO, EmailDTO, LoginDTO, SignupDTO } from '../dto/authDTO';
+import {
+  ConfirmEmailDTO,
+  EmailDTO,
+  LoginDTO,
+  PasswordResetDTO,
+  SignupDTO,
+} from '../dto/authDTO';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ConfirmEmailDecorator,
   LoginDecorator,
   PasswordForgotDecorator,
+  PasswordResetDecorator,
   ResendConfirmEmailDecorator,
   SignupDecorator,
 } from '../decorator/authDecorator';
@@ -39,5 +46,10 @@ export class AuthController {
   @PasswordForgotDecorator('password-forgot')
   async passwordForgot(@Body() emailDTO: EmailDTO) {
     return this.authService.passwordForgot(emailDTO);
+  }
+
+  @PasswordResetDecorator('password-reset')
+  async passwordReset(@Body() passwordResetDTO: PasswordResetDTO) {
+    return this.authService.passwordReset(passwordResetDTO);
   }
 }
