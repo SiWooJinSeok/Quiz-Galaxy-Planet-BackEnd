@@ -75,6 +75,19 @@ export class AuthService {
   async signup(signupDTO: SignupDTO) {
     const { email, nickname, password } = signupDTO;
 
+    const userCheck = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (userCheck) {
+      throw new HttpException(
+        AUTH_ERROR_MESSAGE.EMAIL_ALREADY_EXISTS,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const command = new SignUpCommand({
       ClientId: this.CLIENT_ID,
       Password: password,
